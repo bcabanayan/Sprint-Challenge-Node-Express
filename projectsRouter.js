@@ -18,8 +18,30 @@ router.get('/', (req, res) => {
         .catch(err => {
             res
                 .status(500)
-                .json({ message: `The projects' information could not be retrieved.`})
+                .json({ message: `The projects' information could not be retrieved.`});
         })
+});
+
+// respond with individual project
+ 
+router.get('/:id', (req, res) => {
+    const { id } = req.params;
+    projectsDb.get(id)
+        .then(project => {
+            if (project) {
+                res.json(project);
+            }
+            else {
+                res
+                    .status(404)
+                    .json({ message: 'The project you requested does not exist.'});
+            }
+        })
+        .catch(err => {
+            res
+                .status(500)
+                .json({ message: `The project's information could not be retrieved.`});
+        });
 });
 
 // export router
