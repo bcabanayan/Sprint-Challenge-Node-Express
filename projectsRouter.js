@@ -121,6 +121,29 @@ router.delete('/:id', (req, res) => {
         });
 });
 
+// get project actions
+
+router.get('/:id/actions', (req, res) => {
+    const { id } = req.params;
+    projectsDb.getProjectActions(id)
+        .then(actions => {
+            if (actions.length > 0) {
+                res
+                    .json(actions);
+            }
+            else {
+                res
+                    .status(404)
+                    .json({ message: 'The project with the specified ID does not exist.'});
+            }
+        })
+        .catch(err => {
+            res
+                .status(500)
+                .json({ message: `The project's actions could not be retrieved.`});
+        });
+});
+
 // export router
 
 module.exports = router;
