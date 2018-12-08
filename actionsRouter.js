@@ -46,15 +46,13 @@ router.get('/:id', (req, res) => {
         });
 });
 
-// insert new project into project database
+// insert new action into action database
 
 router.post('/', (req, res) => {
     const newAction = req.body;
-    // COMMENTED OUT CODE TO CHECK FOR VALID PROJECT ID
-    // const projectId = req.body.project_id;
-    // projectsDb.get(projectId)
-    //     .then(project => {
-            // if (project) {
+    const id = req.body.project_id;
+    projectsDb.get(id)
+        .then(project => {
                 if (newAction.description && newAction.notes) {
                     actionsDb.insert(newAction)
                         .then(addedAction => {
@@ -73,14 +71,15 @@ router.post('/', (req, res) => {
                         .status(400)
                         .json({ message: 'Please provide the description and notes for the new action.'})
                 };
-            // }
-        //     else {
-        //         res
-        //             .status(400)
-        //             .json({ message: 'The project ID is invalid.'})
-        //     }
-        // }) 
+        })
+        .catch(err => {
+            res
+                .status(400)
+                .json({ message: 'The specified project does not exist.'})
+        })       
 });
+
+// update existing action
 
 router.put('/:id', (req, res) => {
     const updatedAction = req.body;
@@ -109,6 +108,28 @@ router.put('/:id', (req, res) => {
             .status(400)
             .json({ message: `Please provide the action's updated description and notes.`});
     };
+});
+
+// delete existing action
+
+router.delete('/:id', (req, res) => {
+    const { id } = req.params;
+    actionsDb.remove(id)
+        .then(count => {
+            if (count) {
+                res.json({ message: 'The action was deleted.' })
+            }
+            else {
+                res
+                    .status(404)
+                    .json({ message: 'The action with the specified ID does not exist.' });
+            }
+        })
+        .catch(err => {
+            res
+                .status(500)
+                .json({ message: 'The action could not be removed.' })
+        });
 });
 
 // export router
