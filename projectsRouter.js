@@ -78,25 +78,47 @@ router.put('/:id', (req, res) => {
             .then(project => {
                 if (project) {
                     res
-                        .json({project})
+                        .json({project});
                 }
                 else {
                     res
                         .status(404)
-                        .json({ message: 'The project with the specified ID does not exist.'})
+                        .json({ message: 'The project with the specified ID does not exist.'});
                 };
             })
             .catch(err => {
                 res
                     .status(500)
-                    .json({ message: 'The project information could not be updated.'})
+                    .json({ message: 'The project information could not be updated.'});
             });
     }
     else {
         res
             .status(400)
-            .json({ message: `Please provide the project's updated name and description.`})
-    }
+            .json({ message: `Please provide the project's updated name and description.`});
+    };
+});
+
+// delete existing project 
+
+router.delete('/:id', (req, res) => {
+    const { id } = req.params;
+    projectsDb.remove(id)
+        .then(count => {
+            if (count) {
+                res.json({ message: 'The project was deleted.' })
+            }
+            else {
+                res
+                    .status(404)
+                    .json({ message: 'The project with the specified ID does not exist.' });
+            }
+        })
+        .catch(err => {
+            res
+                .status(500)
+                .json({ message: 'The project could not be removed.' })
+        });
 });
 
 // export router
