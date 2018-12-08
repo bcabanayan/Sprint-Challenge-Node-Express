@@ -3,5 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/bcabanayan/Sprint-Challenge-Node-Express.git",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "knex": "^0.15.2",
+    "sqlite3": "^4.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.7"
+  }
 }
