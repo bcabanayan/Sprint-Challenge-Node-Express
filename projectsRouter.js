@@ -68,6 +68,37 @@ router.post('/', (req, res) => {
     };
 });
 
+// update existing project
+
+router.put('/:id', (req, res) => {
+    const updatedProject = req.body;
+    const { id } = req.params;
+    if (updatedProject.name && updatedProject.description) {
+        projectsDb.update(id, updatedProject)
+            .then(project => {
+                if (project) {
+                    res
+                        .json({project})
+                }
+                else {
+                    res
+                        .status(404)
+                        .json({ message: 'The project with the specified ID does not exist.'})
+                };
+            })
+            .catch(err => {
+                res
+                    .status(500)
+                    .json({ message: 'The project information could not be updated.'})
+            });
+    }
+    else {
+        res
+            .status(400)
+            .json({ message: `Please provide the project's updated name and description.`})
+    }
+});
+
 // export router
 
 module.exports = router;
